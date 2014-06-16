@@ -36,6 +36,9 @@ All text above, and the first splash screen(Adafruit) must be included in any re
 #include "bitmap.h"
 
 ///////////////////////////////////////////////////////////////////
+int led = 6;
+
+
 //----- OLED instance
 #define OLED_RESET 4
 Adafruit_SSD1306 display(OLED_RESET);
@@ -161,24 +164,44 @@ boolean isClicked = false;
 void setup()   {
   //Serial.begin(9600);    // Do not enable serial. This makes serious problem because of shortage of RAM.
   pinMode(buttonPin, INPUT);  // Defines button pin
-  
+   pinMode(led, OUTPUT);  
+   delay(200); 
+  digitalWrite(led, HIGH);
+  delay(200); 
+  digitalWrite(led, LOW);
+  delay(200); 
+
   init_emg_array();
   init_msg_array();
   
   //----- by default, we'll generate the high voltage from the 3.3v line internally! (neat!)
   display.begin(SSD1306_SWITCHCAPVCC, 0x3c);  // initialize with the I2C addr 0x3D (for the 128x64)
+  digitalWrite(led, HIGH);
+  delay(200); 
+  digitalWrite(led, LOW);
+  delay(200); 
   display.display();    // show splashscreen
-  delay(1000);
+  digitalWrite(led, HIGH);
+  delay(200); 
+  digitalWrite(led, LOW);
+  delay(200); 
+  digitalWrite(led, HIGH);
+  delay(200); 
+  digitalWrite(led, LOW);
+  delay(200); 
   drawStartUp();    // Show RetroWatch Logo
-  centerX = display.width() / 2;
+   centerX = display.width() / 2;
   centerY = display.height() / 2;
   iRadius = centerY - 2;
 
   BTSerial.begin(9600);  // set the data rate for the BT port
+  digitalWrite(led, LOW);
+
 }
 
 
 void loop() {
+  digitalWrite(led, !digitalRead(led));
   boolean isReceived = false;
   unsigned long current_time = 0;
   
