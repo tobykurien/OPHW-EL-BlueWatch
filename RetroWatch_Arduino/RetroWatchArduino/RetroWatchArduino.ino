@@ -163,7 +163,7 @@ boolean isClicked = false;
 
 void setup()   {
   //Serial.begin(9600);    // Do not enable serial. This makes serious problem because of shortage of RAM.
-  pinMode(buttonPin, INPUT);  // Defines button pin
+  pinMode(buttonPin, INPUT_PULLUP);  // Defines button pin
    pinMode(led, OUTPUT);  
    delay(200); 
   digitalWrite(led, HIGH);
