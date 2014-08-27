@@ -8,7 +8,15 @@ LCD_SSD1306 lcd; /* for SSD1306 OLED module */
 SoftwareSerial BTSerial(2, 3); //Connect HC-06, RX, TX
 
 int BUTTON1 = 5;
-int button1State = LOW;
+int button1State = HIGH;
+
+int BUTTON2 = 7;
+int button2State = HIGH;
+
+int BUTTON3 = 8;
+int button3State = HIGH;
+
+int LED1 = 6;
 
 static const PROGMEM uint8_t smile[48 * 48 / 8] = {
   0x00,0x00,0x00,0x00,0x00,0x00,0x80,0xC0,0xE0,0xF0,0xF8,0xF8,0xFC,0xFC,0xFE,0xFE,0x7E,0x7F,0x7F,0x3F,0x3F,0x3F,0x3F,0x3F,0x3F,0x3F,0x3F,0x3F,0x3F,0x7F,0x7F,0x7E,0xFE,0xFE,0xFC,0xFC,0xF8,0xF8,0xF0,0xE0,0xC0,0x80,0x00,0x00,0x00,0x00,0x00,0x00,
@@ -23,7 +31,10 @@ void setup()
 {
   lcd.begin();
   
-  pinMode(BUTTON1, INPUT);
+  pinMode(BUTTON1, INPUT_PULLUP);
+  pinMode(BUTTON2, INPUT_PULLUP);
+  pinMode(BUTTON3, INPUT_PULLUP);
+  pinMode(LED1, OUTPUT);
   
   BTSerial.begin(9600); // set the data rate for the BT port
   Serial.begin(9600); 
@@ -34,21 +45,34 @@ void loop()
 {
   if (digitalRead(BUTTON1) == HIGH && button1State == LOW) {
     // transition
-    Serial.write("Button 1 pressed\r\n");
-    drawSmile();
+    Serial.write("Button 1 released\r\n");
+    drawText();
     button1State = HIGH;
+    digitalWrite(LED1, LOW);
   }
   
   if (digitalRead(BUTTON1) == LOW && button1State == HIGH) {
     // transition
-    Serial.write("Button 1 released\r\n");
-    drawText();
+    Serial.write("Button 1 pressed\r\n");
+    drawSmile();
     button1State = LOW;
+    digitalWrite(LED1, HIGH);
+  }
+
+  if (digitalRead(BUTTON2) == LOW && button2State == HIGH) {
+    // transition
+    Serial.write("Button 2 down\r\n");
+  }
+
+  if (digitalRead(BUTTON3) == LOW && button3State == HIGH) {
+    // transition
+    Serial.write("Button 3 down\r\n");
   }
 
   if (BTSerial.available()) {
     byte c = BTSerial.read();
     Serial.write(c);
+    lcd.print("" + c);
   }
 
   delay(10);

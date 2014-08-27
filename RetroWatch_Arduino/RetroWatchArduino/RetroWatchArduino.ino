@@ -206,7 +206,7 @@ void loop() {
   unsigned long current_time = 0;
   
   // Get button input
-  if(digitalRead(buttonPin) == LOW) isClicked = LOW;
+  if(digitalRead(buttonPin) == LOW) isClicked = true;
   
   // Receive data from remote and parse
   isReceived = receiveBluetoothData();
