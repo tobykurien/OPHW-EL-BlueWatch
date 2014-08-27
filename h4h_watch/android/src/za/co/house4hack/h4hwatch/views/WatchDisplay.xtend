@@ -10,6 +10,7 @@ import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.View
 import za.co.house4hack.h4hwatch.R
+import android.graphics.Rect
 
 class WatchDisplay extends View {
    var Bitmap bitmap
@@ -35,18 +36,25 @@ class WatchDisplay extends View {
       paint.color = Color.WHITE
    }
    
+   override protected onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+      setMeasuredDimension(widthMeasureSpec, heightMeasureSpec * 64 / 128)
+   }
+   
    override protected onDraw(Canvas canvas) {
       super.onDraw(canvas)
       
       canvas.save
-      canvas.drawBitmap(bitmap, 0, 0, paint)
-      canvas.drawLine(0, 0, 128, 64, paint)
+      canvas.drawBitmap(bitmap, 
+         new Rect(0, 0, bitmap.width, bitmap.height), 
+         new Rect(0, 0, canvas.width, canvas.height), 
+         paint)
+      canvas.drawLine(0, 0, canvas.width, canvas.height, paint)
       canvas.restore
    }
    
    def public Bitmap getBitmap() {
       //Define a bitmap with the same size as the view
-      var Bitmap returnedBitmap = Bitmap.createBitmap(getWidth(), getHeight(),Bitmap.Config.ARGB_8888);
+      var Bitmap returnedBitmap = Bitmap.createBitmap(128, 64, Bitmap.Config.ARGB_8888);
       //Bind a canvas to it
       var Canvas canvas = new Canvas(returnedBitmap);
       //Get the view's background
@@ -55,8 +63,8 @@ class WatchDisplay extends View {
             //has background drawable, then draw it on the canvas
             bgDrawable.draw(canvas);
       } else { 
-            //does not have background drawable, then draw white background on the canvas
-            canvas.drawColor(Color.WHITE);
+            //does not have background drawable, then draw black background on the canvas
+            canvas.drawColor(Color.BLACK);
       }
       
       // draw the view on the canvas
