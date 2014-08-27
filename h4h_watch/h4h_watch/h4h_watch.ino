@@ -69,7 +69,6 @@ void handleButtons() {
   
   if (digitalRead(BUTTON1) == LOW && button1State == HIGH) {
     // transition
-    Serial.write("Button 1 pressed\r\n");
     button1State = LOW;
     transition = true;
     digitalWrite(LED1, HIGH);
@@ -77,44 +76,43 @@ void handleButtons() {
 
   if (digitalRead(BUTTON1) == HIGH && button1State == LOW) {
     // transition
-    Serial.write("Button 1 released\r\n");
     button1State = HIGH;
     transition = true;
     digitalWrite(LED1, LOW);
+    if (display_awake) BTSerial.write("BUTTON1\n");
   }
 
   if (digitalRead(BUTTON2) == LOW && button2State == HIGH) {
     // transition
-    Serial.write("Button 2 pressed\r\n");
     transition = true;
     button2State = LOW;
   }
 
   if (digitalRead(BUTTON2) == HIGH && button2State == LOW) {
     // transition
-    Serial.write("Button 2 released\r\n");
     transition = true;
     button2State = HIGH;
+    if (display_awake) BTSerial.write("BUTTON2\n");
   }
 
   if (digitalRead(BUTTON3) == LOW && button3State == HIGH) {
     // transition
-    Serial.write("Button 3 pressed\r\n");
     transition = true;
     button3State = LOW;
   }
 
   if (digitalRead(BUTTON3) == HIGH && button3State == LOW) {
     // transition
-    Serial.write("Button 3 released\r\n");
     transition = true;
     button3State = HIGH;
+    if (display_awake) BTSerial.write("BUTTON3\n");
   }
 
   if (transition) {
+    display_timeout = millis();
     if (button1State == LOW || button2State == LOW || button3State == LOW) {
-      wakeDisplay();
-      lcd.invertDisplay(1);
+      lcd.invertDisplay(1);      
+      if (!display_awake) requestFrameBuffer();
     } else {
       lcd.invertDisplay(0);
     }
@@ -140,6 +138,11 @@ void handleBluetooth() {
   }
 }
 
+void requestFrameBuffer() {
+  // send a request to the watch for a frame buffer to display
+  BTSerial.write("FRAME_BUFFER\n");
+}
+
 void handleDisplayTimeout() {
   if (display_awake == true && (millis() - display_timeout) > DISPLAY_TIMEOUT) {
     lcd.clear();
@@ -150,7 +153,6 @@ void handleDisplayTimeout() {
 void wakeDisplay() {
   display_timeout = millis();
   display_awake = true;
-  drawFrameBuffer();
 }
 
 void drawWelcome() {
@@ -210,7 +212,3 @@ void drawFrameBuffer() {
     TWBR = twbrbackup;  
 }
 
-void demo() {
-  drawText();
-  delay(1000);
-}
