@@ -34,8 +34,11 @@ int stateFbCounter = 0; // counter for reading frame buffer data
 const int FRAME_BUFFER_SIZE = SSD1306_LCDWIDTH * SSD1306_LCDHEIGHT / 8;
 static byte frame_buf[FRAME_BUFFER_SIZE];
 
-void setup()
-{
+const int DISPLAY_TIMEOUT = 1000*5;
+int display_timeout = millis();
+boolean display_awake = true;
+
+void setup() {
   lcd.begin();
   
   pinMode(BUTTON1, INPUT_PULLUP);
@@ -54,40 +57,71 @@ void setup()
   drawWelcome();
 }
 
-void loop()
-{
-  if (digitalRead(BUTTON1) == HIGH && button1State == LOW) {
-    // transition
-    Serial.write("Button 1 released\r\n");
+void loop() {
+  handleButtons();
+  handleBluetooth();
+  handleDisplayTimeout();
+  delay(10);
+}
 
-    lcd.invertDisplay(0);
-    lcd.clear();
-    drawFrameBuffer();
-
-    button1State = HIGH;
-    digitalWrite(LED1, LOW);
-  }
+void handleButtons() {
+  boolean transition = false;
   
   if (digitalRead(BUTTON1) == LOW && button1State == HIGH) {
     // transition
     Serial.write("Button 1 pressed\r\n");
-
-    lcd.invertDisplay(1);
-    
     button1State = LOW;
+    transition = true;
     digitalWrite(LED1, HIGH);
+  }
+
+  if (digitalRead(BUTTON1) == HIGH && button1State == LOW) {
+    // transition
+    Serial.write("Button 1 released\r\n");
+    button1State = HIGH;
+    transition = true;
+    digitalWrite(LED1, LOW);
   }
 
   if (digitalRead(BUTTON2) == LOW && button2State == HIGH) {
     // transition
-    Serial.write("Button 2 down\r\n");
+    Serial.write("Button 2 pressed\r\n");
+    transition = true;
+    button2State = LOW;
+  }
+
+  if (digitalRead(BUTTON2) == HIGH && button2State == LOW) {
+    // transition
+    Serial.write("Button 2 released\r\n");
+    transition = true;
+    button2State = HIGH;
   }
 
   if (digitalRead(BUTTON3) == LOW && button3State == HIGH) {
     // transition
-    Serial.write("Button 3 down\r\n");
+    Serial.write("Button 3 pressed\r\n");
+    transition = true;
+    button3State = LOW;
   }
 
+  if (digitalRead(BUTTON3) == HIGH && button3State == LOW) {
+    // transition
+    Serial.write("Button 3 released\r\n");
+    transition = true;
+    button3State = HIGH;
+  }
+
+  if (transition) {
+    if (button1State == LOW || button2State == LOW || button3State == LOW) {
+      wakeDisplay();
+      lcd.invertDisplay(1);
+    } else {
+      lcd.invertDisplay(0);
+    }
+  }
+}
+
+void handleBluetooth() {
   while (BTSerial.available()) {
     byte c = BTSerial.read();
     if (state == STATE_IDLE && c == CMD_FRAME_BUFFER) {
@@ -99,12 +133,24 @@ void loop()
       if (stateFbCounter >= FRAME_BUFFER_SIZE) {
         // done reading frame buffer
         state = STATE_IDLE;
+        wakeDisplay();
         drawFrameBuffer();
       }
     }
   }
+}
 
-  delay(10);
+void handleDisplayTimeout() {
+  if (display_awake == true && (millis() - display_timeout) > DISPLAY_TIMEOUT) {
+    lcd.clear();
+    display_awake = false;
+  }
+}
+
+void wakeDisplay() {
+  display_timeout = millis();
+  display_awake = true;
+  drawFrameBuffer();
 }
 
 void drawWelcome() {
@@ -121,33 +167,6 @@ void drawWelcome() {
   lcd.print("Load app and");
   lcd.setCursor(0, 4);
   lcd.print("connect to start");
-}
-
-void drawText() {
-  lcd.clear();
-  lcd.setCursor(0, 0);
-  lcd.setFont(FONT_SIZE_SMALL);
-  lcd.print("Hello, world!");
-
-  lcd.setCursor(0, 1);
-  lcd.setFont(FONT_SIZE_MEDIUM);
-  lcd.print("Hello, world!");
-
-  lcd.setCursor(0, 3);
-  lcd.setFont(FONT_SIZE_SMALL);
-  lcd.printLong(12345678);
-
-  lcd.setCursor(64, 3);
-  lcd.setFont(FONT_SIZE_MEDIUM);
-  lcd.printLong(12345678);
-
-  lcd.setCursor(0, 4);
-  lcd.setFont(FONT_SIZE_LARGE);
-  lcd.printLong(12345678);
-
-  lcd.setCursor(0, 6);
-  lcd.setFont(FONT_SIZE_XLARGE);
-  lcd.printLong(12345678);
 }
 
 void drawFrameBuffer() {

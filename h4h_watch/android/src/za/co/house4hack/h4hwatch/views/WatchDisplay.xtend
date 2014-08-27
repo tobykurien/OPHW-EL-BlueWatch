@@ -5,16 +5,20 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.Paint.Align
+import android.graphics.Paint.Style
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.View
+import java.text.SimpleDateFormat
+import java.util.Date
 import za.co.house4hack.h4hwatch.R
-import android.graphics.Rect
 
 class WatchDisplay extends View {
    var Bitmap bitmap
    var Paint paint
+   var timeFormat = new SimpleDateFormat("HH:mm")
    
    new(Context context) {
       super(context)
@@ -32,8 +36,12 @@ class WatchDisplay extends View {
       super.onAttachedToWindow()
       var bd = resources.getDrawable(R.drawable.ic_launcher) as BitmapDrawable
       bitmap = bd.bitmap
+      
       paint = new Paint
       paint.color = Color.WHITE
+      paint.style = Style.FILL
+      paint.textSize = 40
+      paint.textAlign = Align.LEFT
    }
    
    override protected onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
@@ -42,13 +50,18 @@ class WatchDisplay extends View {
    
    override protected onDraw(Canvas canvas) {
       super.onDraw(canvas)
+      var date = new Date
       
       canvas.save
-      canvas.drawBitmap(bitmap, 
-         new Rect(0, 0, bitmap.width, bitmap.height), 
-         new Rect(0, 0, canvas.width, canvas.height), 
-         paint)
-      canvas.drawLine(0, 0, canvas.width, canvas.height, paint)
+      
+//      canvas.drawBitmap(bitmap, 
+//         new Rect(0, 0, bitmap.width, bitmap.height), 
+//         new Rect(0, 0, canvas.width, canvas.height), 
+//         paint)
+
+      canvas.drawText(timeFormat.format(date), 10, canvas.height/2, paint)
+
+//      canvas.drawLine(0, 0, canvas.width, canvas.height, paint)
       canvas.restore
    }
    
