@@ -16,9 +16,6 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
-import za.co.house4hack.h4hwatch.logic.WatchState;
-
-import org.eclipse.xtext.xbase.lib.Functions.Function1;
 
 public class BluetoothHelper {
 	protected static final String WATCH_NAME_PREFIX = "HC-06";	
@@ -40,11 +37,23 @@ public class BluetoothHelper {
 	public static boolean mIsBound;
 	
 	private final Activity activity;
-	private OnStateChangedListener listener = null;
+	private BluetoothActivity listener = null;
 
+	public interface BluetoothActivity {
+		public void logMessage(String message);
+		public void onStateChanged(Item thatChanged);
+	}
+	
 	public BluetoothHelper(Activity activity) {
 		this.activity = activity;
-		this.listener = (OnStateChangedListener) activity;
+		
+		try {
+			this.listener = (BluetoothActivity) activity;
+		} catch (ClassCastException e) {
+			// ignore if activity doesn't implement the correct interface
+			this.listener = null;
+		}
+		
 		init();
 	}
 	
@@ -54,8 +63,7 @@ public class BluetoothHelper {
 
 		// If the adapter is null, then Bluetooth is not supported
 		if (mBtAdapter == null) {
-			Toast.makeText(activity, "Bluetooth is not available",
-					Toast.LENGTH_LONG).show();
+			listener.logMessage("Bluetooth is not available");
 			// finish();
 			return;
 		}
@@ -149,8 +157,8 @@ public class BluetoothHelper {
 					if (device.getName().startsWith(WATCH_NAME_PREFIX)) {
 						Log.d(TAG, "Found unpaired device " + device.getName()
 								+ " - " + device.getAddress());
-						logMessage("Found device " + device.getName() + " - " + device.getAddress());
-						logMessage("Connecting to the unpaired device...");
+						listener.logMessage("Found device " + device.getName() + " - " + device.getAddress());
+						listener.logMessage("Connecting to the unpaired device...");
 						connectDevice(device, false);
 					}
 				}
@@ -163,8 +171,13 @@ public class BluetoothHelper {
 		}
 	};
 
-	public void connectWatch(OnStateChangedListener listener) {
-		mService.watchState.setListener(listener);
+	public void connectWatch(final BluetoothActivity listener) {
+		mService.watchState.setListener(new OnStateChangedListener() {
+			@Override
+			public void onStateChanged(Item thatChanged) {
+				listener.onStateChanged(thatChanged);
+			}
+		});
 
 		// If BT is not on, request that it be enabled.
 		// setupChat() will then be called during onActivityResult
@@ -193,16 +206,10 @@ public class BluetoothHelper {
 				// found our device, connect to it
 				Log.d(TAG,
 						"Found device " + d.getName() + " - " + d.getAddress());
-				logMessage("Found device " + d.getName() + " - " + d.getAddress());
-				logMessage("Connecting to device...");
+				listener.logMessage("Found device " + d.getName() + " - " + d.getAddress());
+				listener.logMessage("Connecting to device...");
 				connectDevice(d, true);
 			}
 		}
 	}	
-	
-	public void logMessage(String message) {
-		//TextView log = (TextView) findViewById(R.id.main_error_log);
-		//log.setText(log.getText() + "\r\n" + message);
-		Toast.makeText(activity, message, Toast.LENGTH_SHORT).show();
-	}
 }

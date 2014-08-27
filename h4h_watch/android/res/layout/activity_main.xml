@@ -1,13 +1,19 @@
 <LinearLayout 
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
     
     <TextView
         android:id="@+id/main_text"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:text="H4H Watch"
         />
+    
+    <za.co.house4hack.h4hwatch.views.WatchDisplay
+        android:id="@+id/watch_display" 
+        android:layout_width="128px"
+        android:layout_height="64px"/>
     
 </LinearLayout>

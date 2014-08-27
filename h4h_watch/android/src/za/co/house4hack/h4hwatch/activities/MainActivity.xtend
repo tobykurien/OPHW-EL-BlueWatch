@@ -4,23 +4,36 @@ import org.xtendroid.app.AndroidActivity
 import org.xtendroid.app.OnCreate
 import za.co.house4hack.h4hwatch.R
 import za.co.house4hack.h4hwatch.bluetooth.BluetoothHelper
+import za.co.house4hack.h4hwatch.bluetooth.BluetoothHelper.BluetoothActivity
 import za.co.house4hack.h4hwatch.bluetooth.BluetoothService
 import za.co.house4hack.h4hwatch.logic.WatchState.Item
-import za.co.house4hack.h4hwatch.logic.WatchState.OnStateChangedListener
 
-@AndroidActivity(R.layout.activity_main) class MainActivity implements OnStateChangedListener {
+@AndroidActivity(R.layout.activity_main) class MainActivity implements BluetoothActivity {
    var BluetoothHelper btUtils = null;
    
    @OnCreate
    def void init() {
       btUtils = new BluetoothHelper(this)
+      
+      watchDisplay.onClickListener = [
+         // start sending frame buffer
+         var bitmap = watchDisplay.getDrawingCache(false)
+         var bytes = newByteArrayOfSize(1025)
+         bytes.set(0, 0x1 as byte) // start frame buffer command
+         for (var i=1; i < bytes.length; i++) {
+            bytes.set(i, 0xAA as byte)
+         }
+                        
+         btUtils.mService.write(bytes)
+      ]
    }
    
    override onDestroy() {
       btUtils.destroy
+      super.onDestroy
    }
    
-   override onStateChanged(Item thatChanged) {
+   def onStateChanged(Item thatChanged) {
       runOnUiThread [|
          if (thatChanged == Item.bluetooth) {
             // disable connect action if we are already connected
@@ -36,13 +49,12 @@ import za.co.house4hack.h4hwatch.logic.WatchState.OnStateChangedListener
             } else {
                // connected
                logMessage("Connected")
-               btUtils.mService.write("H4h".getBytes)
             }
          }
       ]
    }
 
-   def logMessage(String message) {
+   override logMessage(String message) {
       mainText.text = message
    }
 }
