@@ -5,6 +5,7 @@ import org.xtendroid.app.AndroidActivity
 import org.xtendroid.app.OnCreate
 import za.co.house4hack.h4hwatch.R
 import za.co.house4hack.h4hwatch.bluetooth.BluetoothService
+import za.co.house4hack.h4hwatch.views.WatchDisplay
 
 @AndroidActivity(R.layout.activity_main) class MainActivity {
    @OnCreate
@@ -12,9 +13,13 @@ import za.co.house4hack.h4hwatch.bluetooth.BluetoothService
       // start watch service
       var intent = new Intent(this, BluetoothService)
       startService(intent)
+
+      val watchDisplay = new WatchDisplay(this)
+      preview.setImageBitmap(watchDisplay.bitmap)
       
-      watchDisplay.onClickListener = [
+      preview.onClickListener = [
          watchDisplay.invalidate
-      ]
+         preview.setImageBitmap(watchDisplay.bitmap)
+      ]           
    }
 }

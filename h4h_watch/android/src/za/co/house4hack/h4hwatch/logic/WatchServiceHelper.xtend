@@ -66,12 +66,12 @@ class WatchServiceHelper implements BluetoothActivity {
                Color.colorToHSV(pix, hsv)
                // set the corresponding bit in frame buffer based on brightness threshold
                b = if (hsv.get(2) > 0.6) {
+                     // set the bit for this pixel
                      b.bitwiseOr(1 << y) 
                    } else {
-                      b.bitwiseAnd((0x1 << y).bitwiseNot)
+                     // clear the bit for this pixel
+                     b.bitwiseAnd((0x1 << y).bitwiseNot)
                    } 
-            } else {
-               b = 0xff
             }               
          }
          

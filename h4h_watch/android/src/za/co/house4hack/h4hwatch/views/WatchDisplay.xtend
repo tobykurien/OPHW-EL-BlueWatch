@@ -65,7 +65,7 @@ class WatchDisplay extends View {
 //         new Rect(0, 0, canvas.width, canvas.height), 
 //         paint)
 
-      canvas.drawText(timeFormat.format(date), canvas.width/2, canvas.height/2, paint)
+      canvas.drawText(timeFormat.format(date), canvas.width/2, canvas.height/2 + 14, paint)
       canvas.drawRect(0, 0, canvas.width - 1, canvas.height - 1, line)
       
       canvas.restore
