@@ -52,21 +52,27 @@ class WatchServiceHelper implements BluetoothActivity {
          for (var y=7; y >= 0; y--) {
             // in the target frame buffer, each byte is 8 *vertical* pixels
             var row = ((i-1) / 128) as int // work out the row based on index in frame buffer
-            
-            try {
-               // get the corresponding pixel from the image to send (remember, 8 vertical pixels per byte)
-               var xCoord = (i-1) % 128
-               var yCoord = y + (row * 8)
-               if (i > 125 && i < 130) Log.d("frame", "Pixel: " + xCoord + "x" + yCoord)
-               
+
+            // get the corresponding pixel from the image to send (remember, 8 vertical pixels per byte)
+            // sequence for x and y coordinates for scanning image into buffer is: 
+            //  0x7, 0x6, ..., 0x0, 1x7, 1x6, ..., 1x0, ..., 127x1, 127x0, 
+            //  0x15, 0x14, ..., 0x8, 1x15, 1x14, ... 
+            var xCoord = (i-1) % 128
+            var yCoord = y + (row * 8)
+
+            if (yCoord < bitmap.height && xCoord < bitmap.width) {
                var pix = bitmap.getPixel(xCoord, yCoord)
                // convert the ARGB value into HSV value to make it easier to convert to monochrome
                Color.colorToHSV(pix, hsv)
                // set the corresponding bit in frame buffer based on brightness threshold
-               b = if (hsv.get(2) > 0.6) b.bitwiseOr(1 << y) else b.bitwiseAnd((0x1 << y).bitwiseNot) 
-            } catch (Exception e) {
-               b = 0x00
-            }
+               b = if (hsv.get(2) > 0.6) {
+                     b.bitwiseOr(1 << y) 
+                   } else {
+                      b.bitwiseAnd((0x1 << y).bitwiseNot)
+                   } 
+            } else {
+               b = 0xff
+            }               
          }
          
          // set the byte that now represents the 8 vertical pixels
