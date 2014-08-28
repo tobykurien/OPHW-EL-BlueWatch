@@ -15,7 +15,6 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.util.Log;
-import android.widget.Toast;
 
 public class BluetoothHelper {
 	protected static final String WATCH_NAME_PREFIX = "HC-06";	
@@ -36,7 +35,7 @@ public class BluetoothHelper {
 	public BluetoothService mService = null;
 	public static boolean mIsBound;
 	
-	private final Activity activity;
+	private final Context activity;
 	private BluetoothActivity listener = null;
 
 	public interface BluetoothActivity {
@@ -44,15 +43,23 @@ public class BluetoothHelper {
 		public void onStateChanged(Item thatChanged);
 	}
 	
-	public BluetoothHelper(Activity activity) {
+	public BluetoothHelper(Context activity) {
 		this.activity = activity;
 		
 		try {
 			this.listener = (BluetoothActivity) activity;
 		} catch (ClassCastException e) {
+			Log.e("bt_helper", "Can't set listener", e);
 			// ignore if activity doesn't implement the correct interface
 			this.listener = null;
 		}
+
+		init();
+	}	
+	
+	public BluetoothHelper(Context activity, BluetoothActivity listener) {
+		this.activity = activity;
+		this.listener = listener;
 		
 		init();
 	}
@@ -63,7 +70,7 @@ public class BluetoothHelper {
 
 		// If the adapter is null, then Bluetooth is not supported
 		if (mBtAdapter == null) {
-			listener.logMessage("Bluetooth is not available");
+			if (listener != null) listener.logMessage("Bluetooth is not available");
 			// finish();
 			return;
 		}
@@ -157,8 +164,8 @@ public class BluetoothHelper {
 					if (device.getName().startsWith(WATCH_NAME_PREFIX)) {
 						Log.d(TAG, "Found unpaired device " + device.getName()
 								+ " - " + device.getAddress());
-						listener.logMessage("Found device " + device.getName() + " - " + device.getAddress());
-						listener.logMessage("Connecting to the unpaired device...");
+						if (listener != null) listener.logMessage("Found device " + device.getName() + " - " + device.getAddress());
+						if (listener != null) listener.logMessage("Connecting to the unpaired device...");
 						connectDevice(device, false);
 					}
 				}
@@ -175,7 +182,7 @@ public class BluetoothHelper {
 		mService.watchState.setListener(new OnStateChangedListener() {
 			@Override
 			public void onStateChanged(Item thatChanged) {
-				listener.onStateChanged(thatChanged);
+				if (listener != null) listener.onStateChanged(thatChanged);
 			}
 		});
 
@@ -184,7 +191,13 @@ public class BluetoothHelper {
 		if (mBtAdapter != null && !mBtAdapter.isEnabled()) {
 			Intent enableIntent = new Intent(
 					BluetoothAdapter.ACTION_REQUEST_ENABLE);
-			activity.startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
+			
+			if (activity instanceof Activity) {
+				((Activity) activity).startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
+			} else {
+				activity.startActivity(enableIntent);
+			}
+			
 			return;
 		}
 
@@ -206,8 +219,8 @@ public class BluetoothHelper {
 				// found our device, connect to it
 				Log.d(TAG,
 						"Found device " + d.getName() + " - " + d.getAddress());
-				listener.logMessage("Found device " + d.getName() + " - " + d.getAddress());
-				listener.logMessage("Connecting to device...");
+				if (listener != null) listener.logMessage("Found device " + d.getName() + " - " + d.getAddress());
+				if (listener != null) listener.logMessage("Connecting to device...");
 				connectDevice(d, true);
 			}
 		}

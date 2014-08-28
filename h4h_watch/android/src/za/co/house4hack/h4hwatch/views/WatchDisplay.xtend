@@ -61,15 +61,21 @@ class WatchDisplay extends View {
 
       canvas.drawText(timeFormat.format(date), 10, canvas.height/2, paint)
 
-//      canvas.drawLine(0, 0, canvas.width, canvas.height, paint)
+      //canvas.drawLine(0, 0, canvas.width, canvas.height, paint)
       canvas.restore
    }
    
    def public Bitmap getBitmap() {
+      onAttachedToWindow
+
       //Define a bitmap with the same size as the view
       var Bitmap returnedBitmap = Bitmap.createBitmap(128, 64, Bitmap.Config.ARGB_8888);
+      if (returnedBitmap == null) throw new Exception("Could not create bitmap")
+      
       //Bind a canvas to it
       var Canvas canvas = new Canvas(returnedBitmap);
+      if (canvas == null) throw new Exception("Could not create canvas")
+
       //Get the view's background
       var Drawable bgDrawable = getBackground();
       if (bgDrawable!=null) { 

@@ -22,6 +22,7 @@ import java.util.UUID;
 
 import za.co.house4hack.h4hwatch.R;
 import za.co.house4hack.h4hwatch.activities.MainActivity;
+import za.co.house4hack.h4hwatch.logic.WatchServiceHelper;
 import za.co.house4hack.h4hwatch.logic.WatchState;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -65,8 +66,10 @@ public class BluetoothService extends Service {
    private ConnectThread mConnectThread;
    private ConnectedThread mConnectedThread;
    private int mState;
+   
    public WatchState watchState = new WatchState();
-
+   public WatchServiceHelper helper;
+   
    // Constants that indicate the current connection state
    public static final int STATE_NONE = 0; // we're doing nothing
    public static final int STATE_LISTEN = 1; // now listening for incoming
@@ -145,6 +148,8 @@ public class BluetoothService extends Service {
       super.onCreate();
       if (D) Log.d(TAG, "onCreate");
 
+      helper = new WatchServiceHelper(this);
+      
       mAdapter = BluetoothAdapter.getDefaultAdapter();
       if (mAdapter != null) {
           mState = STATE_NONE;
@@ -577,7 +582,6 @@ public class BluetoothService extends Service {
     * Show a notification while this service is running.
     */
    private void showNotification(String text) {
-      if (true) return;
       // In this sample, we'll use the same text for the ticker and the expanded
       // notification
       // CharSequence text = "DroidOrb waiting for accessory"; //

@@ -34,8 +34,8 @@ int stateFbCounter = 0; // counter for reading frame buffer data
 const int FRAME_BUFFER_SIZE = SSD1306_LCDWIDTH * SSD1306_LCDHEIGHT / 8;
 static byte frame_buf[FRAME_BUFFER_SIZE];
 
-const int DISPLAY_TIMEOUT = 1000*5;
-int display_timeout = millis();
+const int DISPLAY_TIMEOUT_SECS = 10;
+long display_timeout = millis();
 boolean display_awake = true;
 
 void setup() {
@@ -51,10 +51,11 @@ void setup() {
 
   // clear frame buffer
   for (int i=0; i < FRAME_BUFFER_SIZE; i++) {
-    frame_buf[i] = 0xFF;
+    frame_buf[i] = 0x0;
   }
   
   drawWelcome();
+  requestFrameBuffer();
 }
 
 void loop() {
@@ -144,14 +145,14 @@ void requestFrameBuffer() {
 }
 
 void handleDisplayTimeout() {
-  if (display_awake == true && (millis() - display_timeout) > DISPLAY_TIMEOUT) {
+  if (display_awake == true && (millis()/1000 - display_timeout) > DISPLAY_TIMEOUT_SECS) {
     lcd.clear();
     display_awake = false;
   }
 }
 
 void wakeDisplay() {
-  display_timeout = millis();
+  display_timeout = millis() / 1000;
   display_awake = true;
 }
 
