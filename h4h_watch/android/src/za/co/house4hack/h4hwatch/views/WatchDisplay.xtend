@@ -10,6 +10,7 @@ import android.graphics.Paint.Style
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -18,6 +19,7 @@ import za.co.house4hack.h4hwatch.R
 class WatchDisplay extends View {
    var Bitmap bitmap
    var Paint paint
+   var Paint line
    var timeFormat = new SimpleDateFormat("HH:mm")
    
    new(Context context) {
@@ -41,7 +43,11 @@ class WatchDisplay extends View {
       paint.color = Color.WHITE
       paint.style = Style.FILL
       paint.textSize = 40
-      paint.textAlign = Align.LEFT
+      paint.textAlign = Align.CENTER
+
+      line = new Paint
+      line.color = Color.WHITE
+      line.style = Style.STROKE
    }
    
    override protected onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
@@ -59,14 +65,14 @@ class WatchDisplay extends View {
 //         new Rect(0, 0, canvas.width, canvas.height), 
 //         paint)
 
-      canvas.drawText(timeFormat.format(date), 10, canvas.height/2, paint)
-
-      //canvas.drawLine(0, 0, canvas.width, canvas.height, paint)
+      canvas.drawText(timeFormat.format(date), canvas.width/2, canvas.height/2, paint)
+      canvas.drawRect(0, 0, canvas.width - 1, canvas.height - 1, line)
+      
       canvas.restore
    }
    
    def public Bitmap getBitmap() {
-      onAttachedToWindow
+      if (paint == null) onAttachedToWindow
 
       //Define a bitmap with the same size as the view
       var Bitmap returnedBitmap = Bitmap.createBitmap(128, 64, Bitmap.Config.ARGB_8888);

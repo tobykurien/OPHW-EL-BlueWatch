@@ -29,6 +29,8 @@ const byte STATE_READING = 0x2;
 
 byte state = STATE_IDLE;
 int stateFbCounter = 0; // counter for reading frame buffer data
+long lastBtRead = 0;
+const int BT_READ_TIMEOUT = 10;
 
 //----- Display frame buffer
 const int FRAME_BUFFER_SIZE = SSD1306_LCDWIDTH * SSD1306_LCDHEIGHT / 8;
