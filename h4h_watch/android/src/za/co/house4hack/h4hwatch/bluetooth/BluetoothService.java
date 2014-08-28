@@ -581,7 +581,7 @@ public class BluetoothService extends Service {
    /**
     * Show a notification while this service is running.
     */
-   private void showNotification(String text) {
+   public void showNotification(String text) {
       // In this sample, we'll use the same text for the ticker and the expanded
       // notification
       // CharSequence text = "DroidOrb waiting for accessory"; //

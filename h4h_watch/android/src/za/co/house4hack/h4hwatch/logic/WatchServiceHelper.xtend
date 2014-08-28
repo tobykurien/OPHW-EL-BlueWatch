@@ -28,7 +28,10 @@ class WatchServiceHelper implements BluetoothActivity {
       if (thatChanged == WatchState.Item.bluetooth) {
          if (btUtils.mService.watchState.getBluetooth() == BluetoothService.STATE_CONNECTED) {
             // connected
+            btUtils.mService.showNotification("Watch connected")
             sendFrameBuffer()
+         } else {
+            btUtils.mService.showNotification("Watch not connected")
          }
       } else if (thatChanged == WatchState.Item.frameBuffer) {
          sendFrameBuffer

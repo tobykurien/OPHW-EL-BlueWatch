@@ -110,13 +110,13 @@ void handleButtons() {
   }
 
   if (transition) {
-    display_timeout = millis();
     if (button1State == LOW || button2State == LOW || button3State == LOW) {
       lcd.invertDisplay(1);      
       if (!display_awake) requestFrameBuffer();
     } else {
       lcd.invertDisplay(0);
     }
+    wakeDisplay();
   }
 }
 
