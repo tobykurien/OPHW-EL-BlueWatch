@@ -195,6 +195,7 @@ public class BluetoothHelper {
 			if (activity instanceof Activity) {
 				((Activity) activity).startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
 			} else {
+				enableIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 				activity.startActivity(enableIntent);
 			}
 			
