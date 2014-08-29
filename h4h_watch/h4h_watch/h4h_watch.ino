@@ -30,7 +30,7 @@ const byte STATE_READING = 0x2;
 byte state = STATE_IDLE;
 int stateFbCounter = 0; // counter for reading frame buffer data
 long lastBtRead = 0;
-const int BT_READ_TIMEOUT = 10;
+const int BT_TIMEOUT_SECS = 10;
 
 //----- Display frame buffer
 const int FRAME_BUFFER_SIZE = SSD1306_LCDWIDTH * SSD1306_LCDHEIGHT / 8;
@@ -123,6 +123,10 @@ void handleButtons() {
 }
 
 void handleBluetooth() {
+  if (millis()/1000 - lastBtRead > BT_TIMEOUT_SECS) {
+    state = STATE_IDLE;
+  }
+  
   while (BTSerial.available()) {
     byte c = BTSerial.read();
     if (state == STATE_IDLE && c == CMD_FRAME_BUFFER) {
@@ -142,6 +146,7 @@ void handleBluetooth() {
 }
 
 void requestFrameBuffer() {
+  lastBtRead = millis()/1000;
   // send a request to the watch for a frame buffer to display
   BTSerial.write("FRAME_BUFFER\n");
 }
