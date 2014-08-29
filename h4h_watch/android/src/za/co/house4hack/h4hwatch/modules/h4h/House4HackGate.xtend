@@ -2,23 +2,21 @@ package za.co.house4hack.h4hwatch.modules.h4h
 
 import android.content.Context
 import android.graphics.Canvas
-import android.graphics.Color
 import android.util.Log
-import android.widget.TextView
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import za.co.house4hack.h4hwatch.R
 import za.co.house4hack.h4hwatch.modules.WatchModule
-import android.widget.LinearLayout
-import android.widget.LinearLayout.LayoutParams
-import android.view.Gravity
+import android.view.View.MeasureSpec
 
 class House4HackGate extends WatchModule {
-   var TextView tv
+   var ViewGroup vg
    
    override init(Context context) {
-      tv = new TextView(context)
-      tv.text = "House4Hack entry"
-      tv.textColor = Color.WHITE
-      tv.textSize = 12
-      tv.gravity = Gravity.CENTER
+      vg = LayoutInflater.from(context)
+            .inflate(R.layout.module_h4h, null, false) as ViewGroup
+      vg.measure(MeasureSpec.makeMeasureSpec(128, MeasureSpec.EXACTLY), 
+                 MeasureSpec.makeMeasureSpec(64, MeasureSpec.EXACTLY));
    }
    
    override getName() {
@@ -30,8 +28,8 @@ class House4HackGate extends WatchModule {
    }
    
    override onDraw(Canvas canvas) {
-      tv.layout(0, 0, canvas.width, canvas.height)
-      tv.draw(canvas)
+      vg.layout(0, 0, canvas.width - 1, canvas.height - 1)
+      vg.draw(canvas)
    }
    
    override onPrimaryAction() {

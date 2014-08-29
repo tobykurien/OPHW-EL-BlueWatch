@@ -1,0 +1,42 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="128dp"
+    android:layout_height="64dp"
+    android:layout_gravity="center"
+    android:orientation="vertical" 
+    android:background="@android:color/black">
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="House4Hack\nEntry"
+        android:maxLines="2"
+        android:gravity="center"
+        android:textSize="12dp"
+        android:textColor="@android:color/white"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Gate"
+            android:textSize="8dp"
+        android:textColor="@android:color/white"/>
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+        
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Door"
+            android:textSize="8dp"
+        android:textColor="@android:color/white"/>
+    </LinearLayout>
+
+</LinearLayout>
