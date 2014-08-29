@@ -4,16 +4,16 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
-import za.co.house4hack.h4hwatch.modules.clock.DigitalClock1
-import za.co.house4hack.h4hwatch.modules.clock.AnalogClock1
+import za.co.house4hack.h4hwatch.modules.WatchModule
 
 /**
  * Renders the watch display by calling the appropriate module(s)
  */
 class WatchDisplay {
-   var clock = new AnalogClock1
+   val WatchModule module
    
-   new(Context context) {
+   new(Context context, WatchModule module) {
+      this.module = module
    }
    
    def void invalidate() {
@@ -31,7 +31,7 @@ class WatchDisplay {
       canvas.drawColor(Color.BLACK);
       
       // draw the view on the canvas
-      clock.onDraw(canvas);
+      module.onDraw(canvas);
       
       //return the bitmap
       return returnedBitmap;

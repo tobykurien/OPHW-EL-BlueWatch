@@ -6,6 +6,8 @@ import android.util.Log
 import za.co.house4hack.h4hwatch.bluetooth.BluetoothHelper
 import za.co.house4hack.h4hwatch.bluetooth.BluetoothHelper.BluetoothActivity
 import za.co.house4hack.h4hwatch.bluetooth.BluetoothService
+import za.co.house4hack.h4hwatch.modules.clock.AnalogClock1
+import za.co.house4hack.h4hwatch.modules.clock.DigitalClock1
 import za.co.house4hack.h4hwatch.views.WatchDisplay
 
 /**
@@ -13,14 +15,23 @@ import za.co.house4hack.h4hwatch.views.WatchDisplay
  * functionality
  */
 class WatchServiceHelper implements BluetoothActivity {
+   val public static clockModules = #[
+      new DigitalClock1, new AnalogClock1
+   ]
+
+   var static WatchServiceHelper instance   
+      
    var BluetoothHelper btUtils = null;   
    val Context context
    var WatchDisplay watchDisplay
+   var selectedClock = 0
    
    new(BluetoothService context) {
+      instance = this
       this.context = context   
       btUtils = new BluetoothHelper(context.applicationContext, this)
-      watchDisplay = new WatchDisplay(context.applicationContext)
+      watchDisplay = new WatchDisplay(context.applicationContext, 
+         clockModules.get(0))
    }
    
    def onStateChanged(WatchState.Item thatChanged) {
@@ -84,5 +95,14 @@ class WatchServiceHelper implements BluetoothActivity {
    
    override void logMessage(String message) {
       Log.d("watch", message)
+   }
+   
+   def static void setSelectedClock(int clock) {
+      if (clock < clockModules.length && clock >= 0) {
+         instance.selectedClock = clock
+         instance.watchDisplay = new WatchDisplay(
+            instance.context.applicationContext, 
+            clockModules.get(clock))
+      }
    }
 }
