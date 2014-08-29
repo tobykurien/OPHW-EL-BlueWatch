@@ -8,13 +8,14 @@ import java.util.Date
 import za.co.house4hack.h4hwatch.modules.WatchModule
 import android.graphics.Paint.Style
 import android.graphics.Paint.Align
+import android.content.Context
 
-class DigitalClock1 implements WatchModule {
+class DigitalClock1 extends WatchModule {
    var Paint paint
    var Paint line
    var timeFormat = new SimpleDateFormat("HH:mm")
    
-   new() {
+   override init(Context context) {
       paint = new Paint
       paint.color = Color.WHITE
       paint.style = Style.FILL
@@ -43,11 +44,5 @@ class DigitalClock1 implements WatchModule {
       canvas.drawRect(0, 0, canvas.width - 1, canvas.height - 1, line)
       
       canvas.restore
-   }
-   
-   override onPrimaryAction() {
-   }
-   
-   override onSecondaryAction() {
    }
 }

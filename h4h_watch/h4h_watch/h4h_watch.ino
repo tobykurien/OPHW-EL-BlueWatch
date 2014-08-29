@@ -64,7 +64,7 @@ void loop() {
   handleButtons();
   handleBluetooth();
   handleDisplayTimeout();
-  delay(10);
+  //delay(10); // power saving
 }
 
 void handleButtons() {
@@ -82,7 +82,7 @@ void handleButtons() {
     button1State = HIGH;
     transition = true;
     digitalWrite(LED1, LOW);
-    if (display_awake) BTSerial.write("BUTTON1\n");
+    sendButton(1);
   }
 
   if (digitalRead(BUTTON2) == LOW && button2State == HIGH) {
@@ -95,7 +95,7 @@ void handleButtons() {
     // transition
     transition = true;
     button2State = HIGH;
-    if (display_awake) BTSerial.write("BUTTON2\n");
+    sendButton(2);
   }
 
   if (digitalRead(BUTTON3) == LOW && button3State == HIGH) {
@@ -108,7 +108,7 @@ void handleButtons() {
     // transition
     transition = true;
     button3State = HIGH;
-    if (display_awake) BTSerial.write("BUTTON3\n");
+    sendButton(3);
   }
 
   if (transition) {
@@ -123,9 +123,10 @@ void handleButtons() {
 }
 
 void handleBluetooth() {
-  if (millis()/1000 - lastBtRead > BT_TIMEOUT_SECS) {
-    state = STATE_IDLE;
-  }
+//  if (millis()/1000 - lastBtRead > BT_TIMEOUT_SECS) {
+//    state = STATE_IDLE;
+//    stateFbCounter = 0;
+//  }
   
   while (BTSerial.available()) {
     byte c = BTSerial.read();
@@ -145,8 +146,17 @@ void handleBluetooth() {
   }
 }
 
+void sendButton(int button) {
+  if (state == STATE_IDLE && display_awake) {
+    if (button == 1) BTSerial.write("BUTTON1\n");
+    else if (button == 2) BTSerial.write("BUTTON2\n");
+    else if (button == 3) BTSerial.write("BUTTON3\n");
+  }
+}
+
 void requestFrameBuffer() {
-  lastBtRead = millis()/1000;
+//  lastBtRead = millis()/1000;
+  
   // send a request to the watch for a frame buffer to display
   BTSerial.write("FRAME_BUFFER\n");
 }

@@ -1,18 +1,17 @@
 package za.co.house4hack.h4hwatch.modules.clock
 
+import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
-import java.text.SimpleDateFormat
+import android.graphics.Paint.Style
 import java.util.Date
 import za.co.house4hack.h4hwatch.modules.WatchModule
-import android.graphics.Paint.Style
-import android.graphics.Paint.Align
 
-class AnalogClock1 implements WatchModule {
+class AnalogClock1 extends WatchModule {
    var Paint line
    
-   new() {
+   override void init(Context context) {
       line = new Paint
       line.color = Color.WHITE
       line.style = Style.STROKE
@@ -57,11 +56,5 @@ class AnalogClock1 implements WatchModule {
       canvas.drawLine(centerX, centerY, centerX, 5, line)
       
       canvas.restore
-   }
-   
-   override onPrimaryAction() {
-   }
-   
-   override onSecondaryAction() {
    }
 }

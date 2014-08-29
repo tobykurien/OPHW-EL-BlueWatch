@@ -8,6 +8,7 @@ import za.co.house4hack.h4hwatch.bluetooth.BluetoothHelper.BluetoothActivity
 import za.co.house4hack.h4hwatch.bluetooth.BluetoothService
 import za.co.house4hack.h4hwatch.modules.clock.AnalogClock1
 import za.co.house4hack.h4hwatch.modules.clock.DigitalClock1
+import za.co.house4hack.h4hwatch.modules.h4h.House4HackGate
 import za.co.house4hack.h4hwatch.views.WatchDisplay
 
 /**
@@ -16,9 +17,10 @@ import za.co.house4hack.h4hwatch.views.WatchDisplay
  */
 class WatchServiceHelper implements BluetoothActivity {
    val public static clockModules = #[
-      new DigitalClock1, new AnalogClock1
+        new DigitalClock1, 
+        new AnalogClock1
    ]
-
+   
    var static WatchServiceHelper instance   
       
    var BluetoothHelper btUtils = null;   
@@ -27,10 +29,13 @@ class WatchServiceHelper implements BluetoothActivity {
    var selectedClock = 0
    
    new(BluetoothService context) {
+      super()
+        
       instance = this
-      this.context = context   
-      btUtils = new BluetoothHelper(context.applicationContext, this)
-      watchDisplay = new WatchDisplay(context.applicationContext, 
+      this.context = context.applicationContext 
+
+      btUtils = new BluetoothHelper(this.context, this)
+      watchDisplay = new WatchDisplay(this.context, 
          clockModules.get(0))
    }
    
@@ -45,6 +50,19 @@ class WatchServiceHelper implements BluetoothActivity {
             btUtils.mService.showNotification("Watch not connected")
          }
       } else if (thatChanged == WatchState.Item.frameBuffer) {
+         sendFrameBuffer
+      } else if (thatChanged == WatchState.Item.button1) {
+         watchDisplay.module.onPrimaryAction
+      } else if (thatChanged == WatchState.Item.button3) {
+         watchDisplay.module.onSecondaryAction
+      } else if (thatChanged == WatchState.Item.button2) {
+         // switch between modules
+         if (watchDisplay.module instanceof House4HackGate) {
+            watchDisplay = new WatchDisplay(context, clockModules.get(selectedClock))
+         } else {
+            watchDisplay = new WatchDisplay(context, new House4HackGate)
+         }
+         
          sendFrameBuffer
       }
    }

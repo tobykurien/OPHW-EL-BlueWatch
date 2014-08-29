@@ -1,23 +1,31 @@
 package za.co.house4hack.h4hwatch.modules
 
+import android.content.Context
 import android.graphics.Canvas
 
 /**
  * Interface for all watch modules
  */
-interface WatchModule {
+public abstract class WatchModule {
+   // all initialization code
+   abstract def void init(Context context);
+   
    // Return the module name
-   def String getName();
+   abstract def String getName();
    
    // Return the module description
-   def String getDescription();
+   abstract def String getDescription();
 
    // Draw the watch display onto the Canvas, sized at 128x64
-   def void onDraw(Canvas canvas);
+   abstract def void onDraw(Canvas canvas);
    
    // Respond to the primary action button
-   def void onPrimaryAction();
+   def void onPrimaryAction() {}
    
    // Respond to the secondary action button
-   def void onSecondaryAction();
+   def void onSecondaryAction() {}
+   
+   override toString() {
+      getName
+   }
 }

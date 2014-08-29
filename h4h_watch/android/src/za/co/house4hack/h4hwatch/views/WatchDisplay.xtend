@@ -10,10 +10,11 @@ import za.co.house4hack.h4hwatch.modules.WatchModule
  * Renders the watch display by calling the appropriate module(s)
  */
 class WatchDisplay {
-   val WatchModule module
+   public val WatchModule module
    
    new(Context context, WatchModule module) {
       this.module = module
+      module.init(context)
    }
    
    def void invalidate() {
