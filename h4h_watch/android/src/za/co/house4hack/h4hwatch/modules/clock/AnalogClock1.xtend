@@ -46,12 +46,13 @@ class AnalogClock1 extends WatchModule {
 
       // draw hour needle
       line.strokeWidth = 4
-      canvas.rotate(360/12 * hours, centerX, centerY)
+      var deg = 360f/12f * (hours as float + mins as float/60f)
+      canvas.rotate(deg, centerX, centerY)
       canvas.drawLine(centerX, centerY, centerX, 16, line)
+      canvas.rotate(-deg, centerX, centerY)
 
       // draw minute needle
       line.strokeWidth = 3
-      canvas.rotate(-360/12 * hours, centerX, centerY)
       canvas.rotate(360/60 * mins, centerX, centerY)
       canvas.drawLine(centerX, centerY, centerX, 5, line)
       
