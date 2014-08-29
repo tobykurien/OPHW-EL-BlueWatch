@@ -64,7 +64,7 @@ void loop() {
   handleButtons();
   handleBluetooth();
   handleDisplayTimeout();
-  //delay(10); // power saving
+  delay(10); // power saving
 }
 
 void handleButtons() {
@@ -118,15 +118,14 @@ void handleButtons() {
     } else {
       lcd.invertDisplay(0);
     }
-    wakeDisplay();
   }
 }
 
 void handleBluetooth() {
-//  if (millis()/1000 - lastBtRead > BT_TIMEOUT_SECS) {
-//    state = STATE_IDLE;
-//    stateFbCounter = 0;
-//  }
+  if (millis()/1000 - lastBtRead > BT_TIMEOUT_SECS) {
+    state = STATE_IDLE;
+    stateFbCounter = 0;
+  }
   
   while (BTSerial.available()) {
     byte c = BTSerial.read();
@@ -155,7 +154,7 @@ void sendButton(int button) {
 }
 
 void requestFrameBuffer() {
-//  lastBtRead = millis()/1000;
+  lastBtRead = millis()/1000;
   
   // send a request to the watch for a frame buffer to display
   BTSerial.write("FRAME_BUFFER\n");
