@@ -21,7 +21,11 @@ class WatchServiceHelper implements BluetoothActivity {
         new AnalogClock1
    ]
    
-   var static WatchServiceHelper instance   
+   val public static watchModules = #[
+      House4HackGate
+   ]
+   
+   var public static WatchServiceHelper instance   
       
    var BluetoothHelper btUtils = null;   
    val Context context
@@ -41,6 +45,10 @@ class WatchServiceHelper implements BluetoothActivity {
    
    def reconnect() {
       btUtils.connectWatch(this)
+   }
+   
+   def stopService() {
+      btUtils.mService.stopSelf
    }
 
    def onStateChanged(WatchState.Item thatChanged) {

@@ -25,6 +25,10 @@ public abstract class WatchModule {
    // Respond to the secondary action button
    def void onSecondaryAction() {}
    
+   def int getSettings() {
+      return -1;
+   }
+   
    override toString() {
       getName
    }

@@ -71,6 +71,10 @@ import android.view.MenuItem
    }
    
    def boolean disconnectAndExit() {
+      var intent = new Intent(this, BluetoothService)
+      intent.putExtra(BluetoothService.EXTRA_EXIT, true)
+      stopService(intent)
+      
       finish
       true
    }

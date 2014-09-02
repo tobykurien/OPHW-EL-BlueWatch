@@ -47,6 +47,8 @@ import android.util.Log;
  */
 public class BluetoothService extends Service {
 	public static String EXTRA_RECONNECT = "reconnect";
+	public static String EXTRA_EXIT = "exit";
+
 	// Debugging
 	private static final String TAG = "BluetoothService";
 	private static final boolean D = true;
@@ -171,7 +173,12 @@ public class BluetoothService extends Service {
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		if (intent.getBooleanExtra(EXTRA_RECONNECT, false)) {
 			helper.reconnect();
-			return Service.START_STICKY;
+			return Service.START_NOT_STICKY;
+		}
+
+		if (intent.getBooleanExtra(EXTRA_EXIT, false)) {
+			stopSelf();
+			return -1;
 		}
 
 		return super.onStartCommand(intent, flags, startId);
