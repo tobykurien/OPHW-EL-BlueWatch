@@ -2,4 +2,8 @@
 
     <string name="app_name">H4H Watch</string>
 
+    <string name="action_connect">Connect</string>
+
+    <string name="action_exit">Exit</string>
+
 </resources>

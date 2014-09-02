@@ -60,6 +60,7 @@ public class BluetoothHandler extends Handler {
                   mConnectedDeviceName = msg.getData().getString(DEVICE_NAME);
                   break;
                case MESSAGE_TOAST:
+                   if (D) Log.i(TAG, "TOAST: " + msg.getData().getString(TOAST));
                   // Toast.makeText(mService, msg.getData().getString(TOAST),
                   // Toast.LENGTH_SHORT).show();
                   if ("Device connection was lost".equals(msg.getData().getString(TOAST))) {
@@ -80,15 +81,14 @@ public class BluetoothHandler extends Handler {
     * @param message
     *           A string of text to send.
     */
-   private void sendBluetooth(String message) {
+   private void sendBluetooth(byte[] message) {
       // Check that we're actually connected before trying anything
       if (mService.getState() != BluetoothService.STATE_CONNECTED) { return; }
 
       // Check that there's actually something to send
-      if (message.length() > 0) {
+      if (message.length > 0) {
          // Get the message bytes and tell the BluetoothChatService to write
-         byte[] send = message.getBytes();
-         mService.write(send);
+         mService.write(message);
       }
    }
 

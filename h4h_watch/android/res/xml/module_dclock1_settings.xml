@@ -1,0 +1,9 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <CheckBoxPreference
+        android:key="dclock1_border"
+        android:summaryOff="Hide border"
+        android:summaryOn="Show border"
+        android:title="Clock Border" />
+
+</PreferenceScreen>

@@ -1,0 +1,16 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/action_bt_connect"
+        android:icon="@drawable/ic_action_bt_connect"
+        android:showAsAction="ifRoom"
+        android:title="@string/action_connect">
+    </item>
+    <item
+        android:id="@+id/action_exit"
+        android:icon="@drawable/ic_action_exit"
+        android:showAsAction="ifRoom"
+        android:title="@string/action_exit">
+    </item>
+
+</menu>

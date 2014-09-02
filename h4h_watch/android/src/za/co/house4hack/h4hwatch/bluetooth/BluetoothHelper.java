@@ -83,14 +83,17 @@ public class BluetoothHelper {
 		if (mService != null)
 			mService.watchState.setListener(null);
 
-		// Stop the Bluetooth chat services
-		// if (mService != null) mService.stop();
 		doUnbindService();
 
 		try {
 			activity.unregisterReceiver(mReceiver);
 		} catch (Exception e) {
 		}
+	}
+	
+	public void stop() {
+		 //Stop the Bluetooth chat services
+		 if (mService != null) mService.stopSelf();
 	}
 	
 	private ServiceConnection mConnection = new ServiceConnection() {

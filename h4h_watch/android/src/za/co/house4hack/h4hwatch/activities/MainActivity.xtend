@@ -1,6 +1,5 @@
 package za.co.house4hack.h4hwatch.activities
 
-import android.R
 import android.content.Intent
 import android.view.View
 import android.widget.AdapterView
@@ -13,6 +12,9 @@ import za.co.house4hack.h4hwatch.logic.WatchServiceHelper
 import za.co.house4hack.h4hwatch.views.WatchDisplay
 
 import static za.co.house4hack.h4hwatch.logic.WatchServiceHelper.*
+import android.view.Menu
+import za.co.house4hack.h4hwatch.R
+import android.view.MenuItem
 
 @AndroidActivity(za.co.house4hack.h4hwatch.R.layout.activity_main) class MainActivity {
    var WatchDisplay watchDisplay
@@ -24,8 +26,8 @@ import static za.co.house4hack.h4hwatch.logic.WatchServiceHelper.*
       startService(intent)
 
       clocks.adapter = new ArrayAdapter<String>(this, 
-         R.layout.simple_spinner_dropdown_item,
-         R.id.text1,
+         android.R.layout.simple_spinner_dropdown_item,
+         android.R.id.text1,
          WatchServiceHelper.clockModules.map [ it.name ]
       )
       
@@ -46,4 +48,32 @@ import static za.co.house4hack.h4hwatch.logic.WatchServiceHelper.*
          preview.setImageBitmap(watchDisplay.bitmap)
       ]           
    }
+   
+   override onCreateOptionsMenu(Menu menu) {
+      menuInflater.inflate(R.menu.main, menu)
+      true
+   }
+   
+   override onOptionsItemSelected(MenuItem item) {
+      switch (item.itemId) {
+         case R.id.action_bt_connect: reconnectBluetooth
+         case R.id.action_exit: disconnectAndExit
+         default: super.onOptionsItemSelected(item)
+      }
+   }
+   
+   def boolean reconnectBluetooth() {
+      var intent = new Intent(this, BluetoothService)
+      intent.putExtra(BluetoothService.EXTRA_RECONNECT, true)
+      startService(intent)
+      
+      true
+   }
+   
+   def boolean disconnectAndExit() {
+      finish
+      true
+   }
+   
+   
 }

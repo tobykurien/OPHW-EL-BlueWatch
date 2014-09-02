@@ -39,6 +39,10 @@ class WatchServiceHelper implements BluetoothActivity {
          clockModules.get(0))
    }
    
+   def reconnect() {
+      btUtils.connectWatch(this)
+   }
+
    def onStateChanged(WatchState.Item thatChanged) {
       logMessage("Got state change " + thatChanged.toString)
       if (thatChanged == WatchState.Item.bluetooth) {
@@ -105,6 +109,8 @@ class WatchServiceHelper implements BluetoothActivity {
                    } 
             }               
          }
+         
+         // TODO compress frame buffer using run-length coding
          
          // set the byte that now represents the 8 vertical pixels
          bytes.set(i, b as byte)
