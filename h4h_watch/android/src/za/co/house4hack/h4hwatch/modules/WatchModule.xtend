@@ -19,11 +19,11 @@ public abstract class WatchModule {
    // Draw the watch display onto the Canvas, sized at 128x64
    abstract def void onDraw(Canvas canvas);
    
-   // Respond to the primary action button
-   def void onPrimaryAction() {}
+   // Respond to the primary action button. Return true to redraw screen
+   def boolean onPrimaryAction() { false }
    
-   // Respond to the secondary action button
-   def void onSecondaryAction() {}
+   // Respond to the secondary action button. Return true to redraw screen
+   def boolean onSecondaryAction() { false }
    
    def int getSettings() {
       return -1;

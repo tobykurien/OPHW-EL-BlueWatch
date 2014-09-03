@@ -67,12 +67,17 @@ class WatchServiceHelper implements BluetoothActivity {
             btUtils.mService.showNotification("Watch not connected")
          }
       } else if (thatChanged == WatchState.Item.frameBuffer) {
+         selectedModule = 0
          watchDisplay = new WatchDisplay(context, clockModules.get(selectedClock))
          sendFrameBuffer
       } else if (thatChanged == WatchState.Item.button1) {
-         watchDisplay.module.onPrimaryAction
+         if (watchDisplay.module.onPrimaryAction) {
+            sendFrameBuffer
+         }
       } else if (thatChanged == WatchState.Item.button3) {
-         watchDisplay.module.onSecondaryAction
+         if (watchDisplay.module.onSecondaryAction) {
+            sendFrameBuffer
+         }
       } else if (thatChanged == WatchState.Item.button2) {
          // switch between modules
          if (selectedModule < 0) {

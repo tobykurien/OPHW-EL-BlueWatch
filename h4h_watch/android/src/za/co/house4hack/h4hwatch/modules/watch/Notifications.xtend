@@ -43,6 +43,8 @@ class Notifications extends WatchModule {
       if (index >= NotificationService.inbox.length) {
          index = 0
       }
+      
+      true
    }
 
    override onSecondaryAction() {
@@ -50,6 +52,8 @@ class Notifications extends WatchModule {
       if (index < 0) {
          index = NotificationService.inbox.length - 1
       }
+
+      true
    }
    
    override onDraw(Canvas canvas) {

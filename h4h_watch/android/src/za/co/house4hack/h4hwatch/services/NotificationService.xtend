@@ -29,7 +29,7 @@ class NotificationService extends AccessibilityService {
             while (inbox.size > 10) inbox.remove(0)
             
             inbox.add(new EventInfo(
-                  evt.text.get(0).toString, 
+                  evt.text.toString, 
                   notif.largeIcon, 
                   notif.when, 
                   notif.number,
