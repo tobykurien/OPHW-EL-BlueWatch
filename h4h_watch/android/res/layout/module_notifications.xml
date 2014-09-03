@@ -1,0 +1,25 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="128dp"
+    android:layout_height="64dp"
+    android:gravity="center"
+    android:orientation="horizontal" 
+    android:background="@android:color/black">
+
+   <ImageView 
+       android:src="@drawable/ic_launcher"
+       android:contentDescription="icon"
+       android:id="@+id/notif_icon"
+       android:layout_width="24dp"
+       android:layout_height="24dp"/>
+    
+    
+    <TextView
+        android:id="@+id/notif_title"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Notification title"
+        android:maxLines="4"
+        android:textSize="8dp"
+        android:textColor="@android:color/white"/>
+
+</LinearLayout>

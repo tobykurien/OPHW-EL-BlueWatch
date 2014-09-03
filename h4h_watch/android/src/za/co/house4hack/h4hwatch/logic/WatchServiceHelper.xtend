@@ -9,8 +9,9 @@ import za.co.house4hack.h4hwatch.bluetooth.BluetoothService
 import za.co.house4hack.h4hwatch.modules.WatchModule
 import za.co.house4hack.h4hwatch.modules.clock.AnalogClock1
 import za.co.house4hack.h4hwatch.modules.clock.DigitalClock1
-import za.co.house4hack.h4hwatch.modules.h4h.House4HackGate
+import za.co.house4hack.h4hwatch.modules.watch.House4HackGate
 import za.co.house4hack.h4hwatch.views.WatchDisplay
+import za.co.house4hack.h4hwatch.modules.watch.Notifications
 
 /**
  * Helper class to be used by the blueooth service to handle watch 
@@ -23,6 +24,7 @@ class WatchServiceHelper implements BluetoothActivity {
    ]
    
    val public static watchModules = #[
+      new Notifications,
       new House4HackGate
    ]
    

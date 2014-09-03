@@ -1,9 +1,9 @@
 <resources>
 
     <string name="app_name">H4H Watch</string>
-
     <string name="action_connect">Connect</string>
-
     <string name="action_exit">Exit</string>
-
+     
+    <string name="request_accessibility">Please enable H4H Watch in the Accessibility settings</string>
+    
 </resources>

@@ -1,25 +1,31 @@
 package za.co.house4hack.h4hwatch.activities
 
 import android.content.Intent
+import android.os.Handler
+import android.provider.Settings
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import org.xtendroid.app.AndroidActivity
 import org.xtendroid.app.OnCreate
+import za.co.house4hack.h4hwatch.R
 import za.co.house4hack.h4hwatch.bluetooth.BluetoothService
 import za.co.house4hack.h4hwatch.logic.WatchServiceHelper
 import za.co.house4hack.h4hwatch.views.WatchDisplay
 
 import static za.co.house4hack.h4hwatch.logic.WatchServiceHelper.*
-import android.view.Menu
-import za.co.house4hack.h4hwatch.R
-import android.view.MenuItem
+import static extension org.xtendroid.utils.AlertUtils.*
 
 @AndroidActivity(R.layout.activity_main) class MainActivity {
+   // flag to let us know if accessibility is working
+   var public static boolean hasAccessibility = false 
    var WatchDisplay watchDisplay
    
    int REQUEST_SETTINGS = 1
+   int REQUEST_ACCESSIBILITY = 2
 
    @OnCreate
    def void init() {
@@ -64,6 +70,11 @@ import android.view.MenuItem
             startActivityForResult(setInt, REQUEST_SETTINGS)
          }
       ]
+
+      new Handler(mainLooper).postDelayed([
+         // if we don't see out own notifications, then accessibility is not set up
+         if (!hasAccessibility) requestAccessibility
+      ], 5000)
    }
    
    override protected onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -104,5 +115,10 @@ import android.view.MenuItem
       true
    }
    
-   
+   def requestAccessibility() {
+      confirm(getString(R.string.request_accessibility)) [
+         intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
+         startActivityForResult(intent, REQUEST_ACCESSIBILITY);
+      ]
+   }  
 }

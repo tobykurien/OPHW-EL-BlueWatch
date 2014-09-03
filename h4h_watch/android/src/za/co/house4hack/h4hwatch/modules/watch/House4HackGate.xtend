@@ -1,4 +1,4 @@
-package za.co.house4hack.h4hwatch.modules.h4h
+package za.co.house4hack.h4hwatch.modules.watch
 
 import android.content.ActivityNotFoundException
 import android.content.Context
