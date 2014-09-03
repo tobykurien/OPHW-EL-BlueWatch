@@ -171,14 +171,16 @@ public class BluetoothService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		if (intent.getBooleanExtra(EXTRA_RECONNECT, false)) {
-			helper.reconnect();
-			return Service.START_NOT_STICKY;
-		}
+		if (intent != null) {
+			if (intent.getBooleanExtra(EXTRA_RECONNECT, false)) {
+				helper.reconnect();
+				return Service.START_NOT_STICKY;
+			}
 
-		if (intent.getBooleanExtra(EXTRA_EXIT, false)) {
-			stopSelf();
-			return -1;
+			if (intent.getBooleanExtra(EXTRA_EXIT, false)) {
+				stopSelf();
+				return -1;
+			}
 		}
 
 		return super.onStartCommand(intent, flags, startId);

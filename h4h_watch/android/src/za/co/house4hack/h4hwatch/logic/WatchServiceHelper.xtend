@@ -23,7 +23,7 @@ class WatchServiceHelper implements BluetoothActivity {
    ]
    
    val public static watchModules = #[
-      House4HackGate
+      new House4HackGate
    ]
    
    var public static WatchServiceHelper instance   
@@ -32,6 +32,7 @@ class WatchServiceHelper implements BluetoothActivity {
    val Context context
    var WatchDisplay watchDisplay
    var selectedClock = 0
+   var selectedModule = 0
    
    new(BluetoothService context) {
       super()
@@ -52,7 +53,7 @@ class WatchServiceHelper implements BluetoothActivity {
       btUtils.mService.stopSelf
    }
 
-   def onStateChanged(WatchState.Item thatChanged) {
+   def void onStateChanged(WatchState.Item thatChanged) {
       logMessage("Got state change " + thatChanged.toString)
       if (thatChanged == WatchState.Item.bluetooth) {
          if (btUtils.mService.watchState.getBluetooth() == BluetoothService.STATE_CONNECTED) {
@@ -72,17 +73,25 @@ class WatchServiceHelper implements BluetoothActivity {
          watchDisplay.module.onSecondaryAction
       } else if (thatChanged == WatchState.Item.button2) {
          // switch between modules
-         if (watchDisplay.module instanceof House4HackGate) {
+         if (selectedModule < 0) {
+            // clock module is first
             watchDisplay = new WatchDisplay(context, clockModules.get(selectedClock))
          } else {
-            watchDisplay = new WatchDisplay(context, new House4HackGate)
+            watchDisplay = new WatchDisplay(context, watchModules.get(selectedModule))
          }
          
-         sendFrameBuffer
+         sendFrameBuffer();
+         
+         // cycle to next module
+         selectedModule++
+         if (selectedModule >= watchModules.length) {
+            // wrap back around to the clock
+            selectedModule = -1
+         }
       }
    }
    
-   def sendFrameBuffer() {
+   def synchronized sendFrameBuffer() {
       // start sending frame buffer
       var bitmap = watchDisplay.bitmap
       var bytes = newByteArrayOfSize(128*64/8 + 2)
