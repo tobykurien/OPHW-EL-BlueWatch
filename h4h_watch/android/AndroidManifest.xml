@@ -23,6 +23,8 @@
             </intent-filter>
         </activity>
         
+        <activity android:name=".activities.ModulePreferences"/>
+        
         <service
             android:name=".bluetooth.BluetoothService"
             android:enabled="true" />

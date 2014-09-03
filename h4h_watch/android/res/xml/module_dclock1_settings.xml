@@ -1,9 +1,17 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <CheckBoxPreference
-        android:key="dclock1_border"
+        android:key="dc1_show_border"
+        android:defaultValue="true"
         android:summaryOff="Hide border"
         android:summaryOn="Show border"
         android:title="Clock Border" />
 
+    <CheckBoxPreference
+        android:key="dc1_show_date"
+        android:defaultValue="false"
+        android:summaryOff="Hide date"
+        android:summaryOn="Show date"
+        android:title="Display date" />
+    
 </PreferenceScreen>

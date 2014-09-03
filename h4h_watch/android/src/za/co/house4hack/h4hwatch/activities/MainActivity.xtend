@@ -16,8 +16,10 @@ import android.view.Menu
 import za.co.house4hack.h4hwatch.R
 import android.view.MenuItem
 
-@AndroidActivity(za.co.house4hack.h4hwatch.R.layout.activity_main) class MainActivity {
+@AndroidActivity(R.layout.activity_main) class MainActivity {
    var WatchDisplay watchDisplay
+   
+   int REQUEST_SETTINGS = 1
 
    @OnCreate
    def void init() {
@@ -37,6 +39,11 @@ import android.view.MenuItem
                WatchServiceHelper.clockModules.get(arg2))
             preview.setImageBitmap(watchDisplay.bitmap)
             WatchServiceHelper.selectedClock = arg2
+            if (WatchServiceHelper.getClock.settings > 0) {
+               clockSettings.enabled = true
+            } else {
+               clockSettings.enabled = false
+            }
          }
          
          override onNothingSelected(AdapterView<?> arg0) {
@@ -47,6 +54,24 @@ import android.view.MenuItem
          watchDisplay.invalidate
          preview.setImageBitmap(watchDisplay.bitmap)
       ]           
+      
+      clockSettings.onClickListener = [
+         // show settings for selected clock
+         var settings = WatchServiceHelper.getClock.settings
+         if (settings > 0) {
+            var setInt = new Intent(this, ModulePreferences)
+            setInt.putExtra(ModulePreferences.EXTRA_XML_ID, settings)
+            startActivityForResult(setInt, REQUEST_SETTINGS)
+         }
+      ]
+   }
+   
+   override protected onActivityResult(int requestCode, int resultCode, Intent data) {
+      super.onActivityResult(requestCode, resultCode, data)
+      
+      if (requestCode == REQUEST_SETTINGS) {
+         preview.performClick
+      }
    }
    
    override onCreateOptionsMenu(Menu menu) {

@@ -6,6 +6,7 @@ import android.util.Log
 import za.co.house4hack.h4hwatch.bluetooth.BluetoothHelper
 import za.co.house4hack.h4hwatch.bluetooth.BluetoothHelper.BluetoothActivity
 import za.co.house4hack.h4hwatch.bluetooth.BluetoothService
+import za.co.house4hack.h4hwatch.modules.WatchModule
 import za.co.house4hack.h4hwatch.modules.clock.AnalogClock1
 import za.co.house4hack.h4hwatch.modules.clock.DigitalClock1
 import za.co.house4hack.h4hwatch.modules.h4h.House4HackGate
@@ -138,5 +139,9 @@ class WatchServiceHelper implements BluetoothActivity {
             instance.context.applicationContext, 
             clockModules.get(clock))
       }
+   }
+   
+   def static WatchModule getClock() {
+      return clockModules.get(instance.selectedClock)
    }
 }
