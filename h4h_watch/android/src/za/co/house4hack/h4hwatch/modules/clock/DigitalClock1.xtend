@@ -1,22 +1,23 @@
 package za.co.house4hack.h4hwatch.modules.clock
 
+import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.Paint.Align
+import android.graphics.Paint.Style
 import java.text.SimpleDateFormat
 import java.util.Date
-import za.co.house4hack.h4hwatch.modules.WatchModule
-import android.graphics.Paint.Style
-import android.graphics.Paint.Align
-import android.content.Context
 import org.xtendroid.annotations.AndroidPreference
 import za.co.house4hack.h4hwatch.R
+import za.co.house4hack.h4hwatch.modules.WatchModule
 
 class DigitalClock1 extends WatchModule {
    var Paint paint
    var Paint line
-   var timeFormat = new SimpleDateFormat("HH:mm")
-   var dateFormat = new SimpleDateFormat("EEE, dd MMM")
+   var timeFormat24 = new SimpleDateFormat("H:mm")
+   var timeFormat12 = new SimpleDateFormat("h:mm")
+   var dateFormat = new SimpleDateFormat("EEE, d MMM")
    var DigitalClock1Settings settings = null
 
    override init(Context context) {
@@ -46,6 +47,11 @@ class DigitalClock1 extends WatchModule {
 
       var textX = canvas.width / 2
       var textY = canvas.height / 2 + 14
+
+      var timeFormat = timeFormat24
+      if (!settings.dc1Hours24) {
+         timeFormat = timeFormat12
+      }
       
       if (settings.dc1ShowDate) {
          paint.textSize = 30
@@ -82,4 +88,5 @@ class DigitalClock1 extends WatchModule {
    // avoid naming conflicts by adding a prefix
    boolean dc1ShowBorder = true
    boolean dc1ShowDate = false
+   boolean dc1Hours24 = true
 }

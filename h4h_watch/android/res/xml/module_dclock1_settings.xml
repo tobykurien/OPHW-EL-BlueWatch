@@ -3,15 +3,22 @@
     <CheckBoxPreference
         android:key="dc1_show_border"
         android:defaultValue="true"
-        android:summaryOff="Hide border"
         android:summaryOn="Show border"
+        android:summaryOff="Hide border"
         android:title="Clock Border" />
 
     <CheckBoxPreference
         android:key="dc1_show_date"
         android:defaultValue="false"
-        android:summaryOff="Hide date"
         android:summaryOn="Show date"
+        android:summaryOff="Hide date"
         android:title="Display date" />
+    
+    <CheckBoxPreference
+        android:key="dc1_hours24"
+        android:defaultValue="true"
+        android:summaryOn="Show 24 hour clock"
+        android:summaryOff="Show 12 hour clock"
+        android:title="24 Hour clock" />
     
 </PreferenceScreen>
