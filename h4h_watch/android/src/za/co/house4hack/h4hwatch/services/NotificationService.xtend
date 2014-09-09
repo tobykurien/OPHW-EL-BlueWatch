@@ -9,17 +9,16 @@ import android.util.Log
 import android.view.accessibility.AccessibilityEvent
 import java.util.ArrayList
 import org.eclipse.xtend.lib.annotations.Data
-import za.co.house4hack.h4hwatch.activities.MainActivity
-
-import static za.co.house4hack.h4hwatch.activities.MainActivity.*
 
 class NotificationService extends AccessibilityService {
+   var public static boolean hasAccessibility = false; 
+   
    var static inbox = new ArrayList<EventInfo>
 
    override onAccessibilityEvent(AccessibilityEvent evt) {
       if (evt.packageName.toString.startsWith("za.co.house4hack.h4hwatch")) {
          // we got our own notification
-         MainActivity.hasAccessibility = true
+         hasAccessibility = true
       } else {
          var notif = evt.parcelableData as Notification
          Log.d("notif", "[" + evt.packageName + "] " + evt.text)

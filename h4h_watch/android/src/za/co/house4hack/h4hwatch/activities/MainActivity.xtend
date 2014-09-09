@@ -14,14 +14,15 @@ import org.xtendroid.app.OnCreate
 import za.co.house4hack.h4hwatch.R
 import za.co.house4hack.h4hwatch.bluetooth.BluetoothService
 import za.co.house4hack.h4hwatch.logic.WatchServiceHelper
+import za.co.house4hack.h4hwatch.services.NotificationService
 import za.co.house4hack.h4hwatch.views.WatchDisplay
 
 import static za.co.house4hack.h4hwatch.logic.WatchServiceHelper.*
+
 import static extension org.xtendroid.utils.AlertUtils.*
 
 @AndroidActivity(R.layout.activity_main) class MainActivity {
    // flag to let us know if accessibility is working
-   var public static boolean hasAccessibility = false 
    var WatchDisplay watchDisplay
    
    int REQUEST_SETTINGS = 1
@@ -73,7 +74,7 @@ import static extension org.xtendroid.utils.AlertUtils.*
 
       new Handler(mainLooper).postDelayed([
          // if we don't see out own notifications, then accessibility is not set up
-         if (!hasAccessibility) requestAccessibility
+         if (!NotificationService.hasAccessibility) requestAccessibility
       ], 5000)
    }
    
